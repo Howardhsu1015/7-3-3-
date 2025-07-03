@@ -1,34 +1,23 @@
-# AI 音樂推薦系統專案
+import pandas as pd
+import numpy as np
+from sentence_transformers import SentenceTransformer
 
-## 專案簡介
+def main():
+    # 讀取歌曲歌詞資料（CSV檔）
+    df = pd.read_csv('songs_lyrics.csv')
+    texts = df['lyrics'].fillna('').tolist()[:50]  # 取前50筆歌詞
 
-本專案旨在建構一個**基於內容的推薦系統**，使用歌曲的歌詞文字資料來推薦相似歌曲。  
-推薦系統透過 TF-IDF 技術，將歌詞向量化，計算歌曲間的相似度，根據使用者輸入的歌曲推薦出歌詞內容相近的其他歌曲。
+    # 載入句子嵌入模型
+    model = SentenceTransformer('all-MiniLM-L6-v2')
 
-## 推薦系統介紹
+    # 產生歌詞向量嵌入
+    embeddings = model.encode(texts, show_progress_bar=True)
 
-基於內容的推薦系統（Content-based Filtering）會根據項目本身的特徵做分析，例如歌詞、類型、歌手等文字資料，找出與使用者喜歡項目相似的其他項目。  
-相較於協同過濾（Collaborative Filtering）依賴大量使用者行為數據，基於內容的方式適合文字型資料集，並且不需要多用戶數據。
+    # 轉成 numpy 陣列並儲存
+    embeddings = np.array(embeddings)
+    np.save('lyrics_embeddings.npy', embeddings)
 
-## 資料集說明
+    print(f"成功產生並儲存 {embeddings.shape[0]} 筆 embedding，維度為 {embeddings.shape[1]}")
 
-本專案使用的資料集為 `songs_lyrics.csv`，包含100筆歌曲資料，主要欄位如下：
-
-| title      | artist    | genre       | lyrics                   |
-|------------|-----------|-------------|--------------------------|
-| Song 1     | Artist A  | Pop         | 歌詞文字內容...          |
-| Song 2     | Artist B  | Rock        | 歌詞文字內容...          |
-| ...        | ...       | ...         | ...                      |
-
-歌詞欄位為歌曲的主要文字特徵，用來進行向量化分析。
-
-## 使用說明
-
-1. 確認 `songs_lyrics.csv` 和 `recommender.py` 在同一資料夾。  
-2. 在命令列執行推薦程式：  
-   ```bash
-   python recommender.py
-這次專案讓我了解基於內容推薦系統的運作原理，透過分析歌詞文字特徵推薦相似歌曲。
-製作資料集及處理文字資料的過程讓我體會到資料準備的重要性。
-雖然使用的是簡單的假資料，但整體流程清晰，對日後處理更大規模資料很有幫助。
-未來期待能嘗試結合更多資料來源，提升推薦效果。
+if __name__ == '__main__':
+    main()
