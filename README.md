@@ -1,30 +1,34 @@
-import pandas as pd
-import random
+# AI 音樂推薦系統專案
 
-titles = [f"Song {i}" for i in range(1, 101)]
-artists = [f"Artist {chr(65 + i%26)}" for i in range(100)]
-genres = ['Pop', 'Rock', 'Classical', 'Indie', 'Folk', 'Blues']
-lyrics_base = [
-    "Love is in the air, shining bright tonight",
-    "Dancing under the moonlight with you",
-    "The mountains are calling, let's go explore",
-    "Sunrise paints the sky with golden light",
-    "Raindrops falling down, memories come back",
-    "Feel the freedom running through your veins",
-    "Whispers of the wind, secrets to unfold",
-    "Hold my hand and never let me go",
-    "Dreams are stars that guide us home",
-    "Together we can face the darkest night"
-]
+## 專案簡介
 
-data = []
-for i in range(100):
-    title = titles[i]
-    artist = artists[i]
-    genre = random.choice(genres)
-    lyrics = " ".join(random.choices(lyrics_base, k=5))
-    data.append([title, artist, genre, lyrics])
+本專案旨在建構一個**基於內容的推薦系統**，使用歌曲的歌詞文字資料來推薦相似歌曲。  
+推薦系統透過 TF-IDF 技術，將歌詞向量化，計算歌曲間的相似度，根據使用者輸入的歌曲推薦出歌詞內容相近的其他歌曲。
 
-df = pd.DataFrame(data, columns=['title', 'artist', 'genre', 'lyrics'])
-df.to_csv('songs_lyrics.csv', index=False)
-print("songs_lyrics.csv 已生成，包含100筆資料")
+## 推薦系統介紹
+
+基於內容的推薦系統（Content-based Filtering）會根據項目本身的特徵做分析，例如歌詞、類型、歌手等文字資料，找出與使用者喜歡項目相似的其他項目。  
+相較於協同過濾（Collaborative Filtering）依賴大量使用者行為數據，基於內容的方式適合文字型資料集，並且不需要多用戶數據。
+
+## 資料集說明
+
+本專案使用的資料集為 `songs_lyrics.csv`，包含100筆歌曲資料，主要欄位如下：
+
+| title      | artist    | genre       | lyrics                   |
+|------------|-----------|-------------|--------------------------|
+| Song 1     | Artist A  | Pop         | 歌詞文字內容...          |
+| Song 2     | Artist B  | Rock        | 歌詞文字內容...          |
+| ...        | ...       | ...         | ...                      |
+
+歌詞欄位為歌曲的主要文字特徵，用來進行向量化分析。
+
+## 使用說明
+
+1. 確認 `songs_lyrics.csv` 和 `recommender.py` 在同一資料夾。  
+2. 在命令列執行推薦程式：  
+   ```bash
+   python recommender.py
+這次專案讓我了解基於內容推薦系統的運作原理，透過分析歌詞文字特徵推薦相似歌曲。
+製作資料集及處理文字資料的過程讓我體會到資料準備的重要性。
+雖然使用的是簡單的假資料，但整體流程清晰，對日後處理更大規模資料很有幫助。
+未來期待能嘗試結合更多資料來源，提升推薦效果。
